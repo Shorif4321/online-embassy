@@ -28,6 +28,15 @@ async function bootstrap() {
         const usersCollection = database.collection("Users");
 
 
+        // users get from database
+        app.get('/users', async (req, res) => {
+            const query = {};
+            const users = await usersCollection.find(query).toArray();
+            res.send(users)
+
+        })
+
+        // user post from frontend to database
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
