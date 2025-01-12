@@ -26,6 +26,14 @@ async function bootstrap() {
         await client.connect();
         const database = client.db("Online-Embassy")
         const usersCollection = database.collection("Users");
+        const appointmentOptionCollection = database.collection("appointmentOptions");
+
+        // service option
+        app.get('/appointmentOptions', async (req, res) => {
+            const query = {};
+            const result = await appointmentOptionCollection.find(query).toArray();
+            res.send(result)
+        })
 
 
         // users get from database
@@ -57,12 +65,17 @@ async function bootstrap() {
             res.send(result)
         })
 
-
-
         // user post from frontend to database
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
+            res.send(result)
+        })
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await usersCollection.deleteOne(query);
             res.send(result)
         })
 
